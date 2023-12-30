@@ -3,12 +3,25 @@ import "./App.css";
 import ProjectsPage from "./projects/ProjectsPage";
 import ProjectPage from './projects/ProjectPage';
 import SubnetsPage from "./subnets/SubnetsPage";
-import { BrowserRouter as Router, Routes, Route, NavLink} from 'react-router-dom';
+import SignInButton from "./SignInButton";
+import SignOutButton from "./SignOutButton";
+import { BrowserRouter as Router, Routes, Route, NavLink, useNavigate} from 'react-router-dom';
 import HomePage from './home/HomePage';
+import { MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated } from "@azure/msal-react";
+import { IPublicClientApplication } from "@azure/msal-browser";
+import { CustomNavigationClient } from "./CustomNavigationClient";
 
-function App() {
+interface AppProps {
+  pca: IPublicClientApplication;
+};
+
+function App({ pca }: AppProps) {      
+  const navigate = useNavigate();
+  const navigationClient = new CustomNavigationClient(navigate);
+  pca.setNavigationClient(navigationClient);
+
   return (
-    <Router>
+    <MsalProvider instance={pca}>
       <header className="sticky">
         <span className="logo">
           <img src="/assets/logo-3.svg" alt="logo" width="49" height="99" />
@@ -23,7 +36,13 @@ function App() {
         <NavLink to="/subnets" className="button rounded">
           Subnets
         </NavLink>
-      </header>      
+        <AuthenticatedTemplate>
+          <SignOutButton />
+        </AuthenticatedTemplate>
+        <UnauthenticatedTemplate>
+          <SignInButton />
+        </UnauthenticatedTemplate>
+      </header>
       <div className="container">
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -32,8 +51,9 @@ function App() {
           <Route path="/subnets" element={<SubnetsPage />} />
         </Routes>
       </div>
-    </Router>
+    </MsalProvider>
   );
 }
+
 
 export default App;
