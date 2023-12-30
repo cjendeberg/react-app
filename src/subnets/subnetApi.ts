@@ -1,9 +1,10 @@
 //import { msalInstance } from '../index';
-import { AccountInfo, IPublicClientApplication } from "@azure/msal-browser";
+import { AccountInfo, IPublicClientApplication, SilentRequest } from "@azure/msal-browser";
 import { IPv4CidrRange } from 'ip-num';
 import { Subnet } from './Subnet';
-import { InteractiveBrowserCredential } from '@azure/identity';
+import { AccessToken, GetTokenOptions, InteractiveBrowserCredential, TokenCredential } from '@azure/identity';
 import { NetworkManagementClient } from '@azure/arm-network';
+
 
 
 const baseUrl = 'http://localhost:4000';
@@ -65,15 +66,76 @@ const getCredential = (account:AccountInfo) =>
       return credential;
 }
 
+class BrowserCredential implements TokenCredential {
+  private publicApp: IPublicClientApplication;
+  private hasAuthenticated: boolean = false;
+
+  constructor(instance:IPublicClientApplication) {
+    this.publicApp = instance;
+  }
+
+  // Either confirm the account already exists in memory, or tries to parse the redirect URI values.
+  async prepare(): Promise<void> {
+    try {
+      if (await this.publicApp.getActiveAccount()) {
+        this.hasAuthenticated = true;
+        return;
+      }
+      await this.publicApp.handleRedirectPromise();
+      this.hasAuthenticated = true;
+    } catch (e) {
+      console.error("BrowserCredential prepare() failed", e);
+    }
+  }
+
+  // Should be true if prepare() was successful.
+  isAuthenticated(): boolean {
+    return this.hasAuthenticated;
+  }
+
+  // If called, triggers authentication via redirection.
+  async loginRedirect(scopes: string | string[]): Promise<void> {
+    const loginRequest = {
+      scopes: Array.isArray(scopes) ? scopes : [scopes]
+    };
+    await this.publicApp.loginRedirect(loginRequest);
+  }
+
+  // Tries to retrieve the token without triggering a redirection.
+  async getToken(scopes: string | string[]): Promise<AccessToken> {
+    if (!this.hasAuthenticated) {
+      throw new Error("Authentication required");
+    }
+
+    const account = this.publicApp.getActiveAccount();
+    if (!account) {
+      throw new Error("Could not get active account");
+    }
+
+    const parameters: SilentRequest = {
+      account: account,
+      scopes: ['User.Read', 'https://management.azure.com/user_impersonation']
+    };
+    
+    const result = await this.publicApp.acquireTokenSilent(parameters);
+    return {
+      token: result.accessToken,
+      //expiresOnTimestamp: result.expiresOn.getTime()
+      expiresOnTimestamp: result!.expiresOn!.getTime()
+    };
+  }
+}
 export async function getSubnets(msalInstance: IPublicClientApplication) {
-  const account: any  = msalInstance.getActiveAccount();
-  const credential = getCredential(account);
+  //const account: any  = msalInstance.getActiveAccount();
+
+  const credential = new BrowserCredential(msalInstance);
+  await credential.prepare();
+  //const credential = getCredential(account);
   
   console.log(credential);
   const subscriptionId = "e47f2843-e9eb-4576-91e6-507ef91488b7";
   const client = new NetworkManagementClient(credential, subscriptionId);
-  
-
+  console.log(client);
   const resourceGroup = "MC_firl-prod-aks-rg_firl-prod-aks_swedencentral";
   const virtualNetworkName = "aks-vnet-14396990";
 
