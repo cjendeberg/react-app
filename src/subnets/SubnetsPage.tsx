@@ -20,7 +20,7 @@ function SubnetsPage() {
       setLoading(true);
       try {        
         const existingSubnets: Subnet[] = await getSubnets(instance);
-        const subnets:Subnet[] = fillSubnetGaps(IPv4CidrRange.fromCidr("172.29.208.0/21"), existingSubnets);
+        const subnets:Subnet[] = fillSubnetGaps(IPv4CidrRange.fromCidr("10.224.0.0/12"), existingSubnets);
         setApiError("");
         setSubnets(subnets);
       } catch (e) {

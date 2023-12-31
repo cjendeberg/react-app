@@ -114,7 +114,7 @@ class BrowserCredential implements TokenCredential {
 
     const parameters: SilentRequest = {
       account: account,
-      scopes: ['User.Read', 'https://management.azure.com/user_impersonation']
+      scopes: ['https://management.azure.com/user_impersonation']
     };
     
     const result = await this.publicApp.acquireTokenSilent(parameters);
@@ -132,20 +132,22 @@ export async function getSubnets(msalInstance: IPublicClientApplication) {
   await credential.prepare();
   //const credential = getCredential(account);
   
-  console.log(credential);
+  if (!credential.isAuthenticated()) {
+    await credential.loginRedirect("https://management.azure.com/user_impersonation");
+  }
+
   const subscriptionId = "e47f2843-e9eb-4576-91e6-507ef91488b7";
-  const client = new NetworkManagementClient(credential, subscriptionId);
-  console.log(client);
+  const client = new NetworkManagementClient(credential, subscriptionId);  
   const resourceGroup = "MC_firl-prod-aks-rg_firl-prod-aks_swedencentral";
   const virtualNetworkName = "aks-vnet-14396990";
 
+  //console.log((await credential.getToken(["https://management.azure.com/user_impersonation"])));
   let resultSubnets:any = [];
   for await (const item of client.subnets.list(
     resourceGroup,
     virtualNetworkName
   )) {
     resultSubnets.push({name: item.name, addressPrefix: item.addressPrefix});
-    console.log(item.name);
   }  
   return convertToSubnetModels(resultSubnets);
 
@@ -170,3 +172,4 @@ export async function getSubnets(msalInstance: IPublicClientApplication) {
   //     );
   //   });
 };
+
