@@ -15,12 +15,25 @@ function SubnetsPage() {
   const [apiError, setApiError] = useState("");
   const { instance, inProgress } = useMsal();
 
+  function compareSubnets(a: Subnet, b: Subnet) {
+    const firstValue: bigint = a.range.getFirst().getValue()
+    const secondValue: bigint = b.range.getFirst().getValue()
+    if(firstValue < secondValue) {
+      return -1;
+    } else if (a.range.getFirst().getValue() > b.range.getFirst().getValue()) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   useEffect(() => {
     async function loadSubnets() {
       setLoading(true);
       try {        
         const existingSubnets: Subnet[] = await getSubnets(instance);
-        const subnets:Subnet[] = fillSubnetGaps(IPv4CidrRange.fromCidr("10.224.0.0/12"), existingSubnets);
+        const subnets:Subnet[] = fillSubnetGaps(IPv4CidrRange.fromCidr("10.224.0.0/12"), existingSubnets).
+          sort(compareSubnets);
         setApiError("");
         setSubnets(subnets);
       } catch (e) {
@@ -43,7 +56,7 @@ function SubnetsPage() {
       <ErrorPage error={apiError} />
       {subnets?.map((subnet:Subnet, index:number) => (
         <div key={index} className="cols-sm">
-          <SubnetCard name={subnet.name} cidr={subnet.cidr} />
+          <SubnetCard name={subnet.name} cidr={subnet.cidr} range={subnet.range} />
         </div>
       ))}
     </>

@@ -17,3 +17,15 @@ body,
   justify-content: center;
   align-items: center;
 }
+
+.subnetContainer {
+  display: flex
+}
+
+.subnetName {
+  width: 100px;
+}
+
+.subnetCidr {
+  width: 200px;
+}
