@@ -1,10 +1,11 @@
 import { Configuration, PopupRequest } from "@azure/msal-browser";
+import {tenantId, clientId} from './config';
 
 // Config object to be passed to Msal on creation
 export const msalConfig: Configuration = {
     auth: {
-        clientId: "d52a3705-876d-4180-bdc4-ce9803daaea7",
-        authority: "https://login.microsoftonline.com/1aa636fe-838e-4bf2-abde-587d68fa3e8c",
+        clientId: clientId,
+        authority: `https://login.microsoftonline.com/${tenantId}`,
         redirectUri: "/",
         postLogoutRedirectUri: "/"
     },

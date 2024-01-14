@@ -885,7 +885,7 @@
       "imageUrl": "/assets/placeimg_500_300_arch4.jpg",
       "contractTypeId": 5,
       "contractSignedOn": "2012-08-09T13:45:53.932Z",
-      "budget": 75030,
+      "budget": 75020,
       "isActive": true
     },
     {
@@ -1025,7 +1025,7 @@
       "imageUrl": "/assets/placeimg_500_300_arch6.jpg",
       "contractTypeId": 2,
       "contractSignedOn": "2010-09-24T21:02:41.601Z",
-      "budget": 38853,
+      "budget": 38850,
       "isActive": false
     },
     {

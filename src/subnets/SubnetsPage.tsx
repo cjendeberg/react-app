@@ -7,6 +7,7 @@ import { fillSubnetGaps } from "./fillSubnetGaps";
 import { IPv4CidrRange } from "ip-num";
 import { useMsal } from "@azure/msal-react";
 import { InteractionStatus } from "@azure/msal-browser";
+import { vnetRange } from "../config";
 
 
 function SubnetsPage() {
@@ -32,7 +33,7 @@ function SubnetsPage() {
       setLoading(true);
       try {        
         const existingSubnets: Subnet[] = await getSubnets(instance);
-        const subnets:Subnet[] = fillSubnetGaps(IPv4CidrRange.fromCidr("10.224.0.0/12"), existingSubnets).
+        const subnets:Subnet[] = fillSubnetGaps(IPv4CidrRange.fromCidr(vnetRange), existingSubnets).
           sort(compareSubnets);
         setApiError("");
         setSubnets(subnets);

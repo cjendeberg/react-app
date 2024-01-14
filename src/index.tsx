@@ -10,15 +10,16 @@ import {
   EventType,
   EventMessage,
 } from "@azure/msal-browser";
+import { msalConfig } from './authConfig';
 
-export const msalInstance = new PublicClientApplication({
-  auth: {
-    clientId: "d52a3705-876d-4180-bdc4-ce9803daaea7",
-    //clientId: '60c5d881-8248-49f3-baaa-3f88471828ca',
-    authority: 'https://login.microsoftonline.com/1aa636fe-838e-4bf2-abde-587d68fa3e8c',
-    redirectUri: '/'
-  }
-});
+export const msalInstance = new PublicClientApplication(msalConfig);
+
+//   auth: {
+//     clientId: "d52a3705-876d-4180-bdc4-ce9803daaea7",
+//     authority: 'https://login.microsoftonline.com/1aa636fe-838e-4bf2-abde-587d68fa3e8c',
+//     redirectUri: '/'
+//   }
+// });
 
 msalInstance.initialize().then(() => {
   const accounts = msalInstance.getAllAccounts();

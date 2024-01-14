@@ -4,8 +4,11 @@ import { IPv4CidrRange } from 'ip-num';
 import { Subnet } from './Subnet';
 import { AccessToken, GetTokenOptions, InteractiveBrowserCredential, TokenCredential } from '@azure/identity';
 import { NetworkManagementClient } from '@azure/arm-network';
-
-
+import {
+  subscriptionId,
+  resourceGroup,
+  virtualNetworkName
+} from '../config'
 
 const baseUrl = 'http://localhost:4000';
 const url = `${baseUrl}/subnets`;
@@ -116,7 +119,7 @@ class BrowserCredential implements TokenCredential {
       account: account,
       scopes: ['https://management.azure.com/user_impersonation']
     };
-    
+
     const result = await this.publicApp.acquireTokenSilent(parameters);
     return {
       token: result.accessToken,
@@ -131,15 +134,12 @@ export async function getSubnets(msalInstance: IPublicClientApplication) {
   const credential = new BrowserCredential(msalInstance);
   await credential.prepare();
   //const credential = getCredential(account);
-  
+
   if (!credential.isAuthenticated()) {
     await credential.loginRedirect("https://management.azure.com/user_impersonation");
   }
 
-  const subscriptionId = "e47f2843-e9eb-4576-91e6-507ef91488b7";
-  const client = new NetworkManagementClient(credential, subscriptionId);  
-  const resourceGroup = "MC_firl-prod-aks-rg_firl-prod-aks_swedencentral";
-  const virtualNetworkName = "aks-vnet-14396990";
+  const client = new NetworkManagementClient(credential, subscriptionId);
 
   //console.log((await credential.getToken(["https://management.azure.com/user_impersonation"])));
   let resultSubnets:any = [];
@@ -148,7 +148,7 @@ export async function getSubnets(msalInstance: IPublicClientApplication) {
     virtualNetworkName
   )) {
     resultSubnets.push({name: item.name, addressPrefix: item.addressPrefix});
-  }  
+  }
   return convertToSubnetModels(resultSubnets);
 
   // const response = await msalInstance.acquireTokenSilent({scopes: ["User.Read"]});
