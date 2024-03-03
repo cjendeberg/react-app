@@ -1,14 +1,15 @@
 import React from 'react';
 import { useIsAuthenticated } from '@azure/msal-react';
-import { AuthenticatedTemplate } from '@azure/msal-react';
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
 import MyInfo from './MyInfo';
 
 function HomePage() {
   const isAuthenticated = useIsAuthenticated();
   return (
     <>
-      <h2>Home</h2>
-      <p>Is authenticated?</p>{isAuthenticated ? <p>yes</p>: <p>no</p>}
+      <UnauthenticatedTemplate>
+      <h2>Welcome to use the DOER toolbox</h2>
+      </UnauthenticatedTemplate>
       <AuthenticatedTemplate>
         <MyInfo />
       </AuthenticatedTemplate>

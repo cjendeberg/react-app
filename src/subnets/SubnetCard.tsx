@@ -9,8 +9,8 @@ interface SubnetCardProps {
 function SubnetCard({name, cidr, range}: SubnetCardProps) {
 
   return (    
-    <div className="subnetContainer">
-      <div className="subnetName">{name}</div><div className="subnetCidr">{cidr}</div>
+    <div className="subnet-row">
+      <div className="subnet-content">{name}</div><div className="subnet-content">{cidr}</div>
     </div>    
   );
 }

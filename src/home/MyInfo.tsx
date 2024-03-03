@@ -17,14 +17,14 @@ function MyInfo() {
   useEffect(() => {
     async function loadData() {
       try {
-        setLoading(true);        
-        await instance.initialize();  
-        const accounts = instance.getAllAccounts();        
+        setLoading(true);
+        await instance.initialize();
+        const accounts = instance.getAllAccounts();
         if (accounts.length > 0) {
           instance.setActiveAccount(accounts[0]);
-        }        
-        const authResult: AuthenticationResult = await instance.acquireTokenSilent(loginRequest);        
-        const result = await callMsGraph(authResult.accessToken);        
+        }
+        const authResult: AuthenticationResult = await instance.acquireTokenSilent(loginRequest);
+        const result = await callMsGraph(authResult.accessToken);
         setData(result);
       } catch(e) {
         if (e  instanceof Error) {
@@ -34,7 +34,7 @@ function MyInfo() {
         setLoading(false);
       }
     }
-    
+
     if(!data && inProgress === InteractionStatus.None && !loading ) {
       loadData();
     }
@@ -42,10 +42,7 @@ function MyInfo() {
 
   return (
       <div id="profile-div">
-        <p><strong>Title: </strong> {data?.jobTitle}</p>
-        <p><strong>Mail: </strong> {data?.mail}</p>
-        <p><strong>Phone: </strong> {data?.businessPhones[0]}</p>
-        <p><strong>Location: </strong> {data?.officeLocation}</p>
+        <p>Welcome {data?.mail}</p>
        </div>
   );
 }

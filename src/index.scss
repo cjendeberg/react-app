@@ -1,4 +1,5 @@
 @import '../node_modules/mini.css/dist/mini-default.min.css';
+
 form {
   min-width: 300px;
 }
@@ -19,7 +20,7 @@ body,
 
 .subnet-row {
   width: 600px;
-  display: flex;
+  display: flex
 }
 
 .subnet-row > :first-child {
@@ -28,21 +29,24 @@ body,
 
 .subnet-row > :not(:first-child) {
   flex: 1; /* Distribute remaining space equally */
-}
-
+  }
+  
+  
 .subnet-name {
-  width: 300px;
+  @extend .subnet-content;
+  width: 300px; 
 }
 
 .subnet-cidr {
+  @extend .subnet-content;
   width: 100px;
 }
 
-.subnet-content, .subnet-name, .subnet-cidr {
+.subnet-content {
   padding: 2px;
   text-align: left;
 }
-
+  
 header {
   height: 5.1875rem;
 }
@@ -52,36 +56,39 @@ a.button.active {
 }
 
 /* Container for 3 columns */
-.ft-row, .ft-row-orange, .ft-row-green, .ft-row-red {
-  width: 600px;
-  display: flex;
+.ft-row {
+width: 600px;
+display: flex;
 }
 
 .ft-row-red {
+  @extend .ft-row;  
   color: red;
 }
 
 .ft-row-green {
+  @extend .ft-row;
   color: green;
 }
 
 .ft-row-orange {
+  @extend .ft-row;
   color: orange;
 }
 
+
 /* First column (fixed size) */
-.ft-row > :first-child, .ft-row-red > :first-child, .ft-row-green > :first-child, .ft-row-orange > :first-child {
-  flex: 0 0 500px;
+.ft-row > :first-child {
+flex: 0 0 500px;
 }
 
 /* Remaining columns (flexible) */
-.ft-row > :not(:first-child), .ft-row-red > :not(:first-child), .ft-row-green > :not(:first-child), .ft-row-orange > :not(:first-child) {
-  flex: 1; /* Distribute remaining space equally */
+.ft-row > :not(:first-child) {
+flex: 1; /* Distribute remaining space equally */
 }
 
 .ft-content {
-  padding: 2px;
-  text-align: left;
+padding: 2px;
+text-align: left;
 }
 
-/*# sourceMappingURL=index.css.map */

@@ -14,6 +14,7 @@
     "@types/node": "^16.18.68",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
+    "axios": "^1.6.7",
     "ip-num": "^1.5.1",
     "json-server": "^0.16.2",
     "mini.css": "^3.0.1",
@@ -22,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "6.3",
     "react-script": "^2.0.5",
+    "sass": "^1.71.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -33,7 +35,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "api": "json-server api/db.json --port 4000"
+    "api": "json-server api/db.json --port 4000",
+    "sass": "sass src/index.scss src/index.css"
   },
   "eslintConfig": {
     "extends": [
