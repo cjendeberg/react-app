@@ -29,7 +29,7 @@ export interface FeatureToggleDiff {
   value2: boolean | undefined
 }
 
-export async function getFeatureToggleDiff(firstEnv:string, secondEnv: string): Promise<FeatureToggleDiff[]|undefined> {
+export async function getFeatureToggleDiff(firstEnv:string, secondEnv: string): Promise<FeatureToggleDiff[]> {
   try {
       const result1:FeatureToggle[] = await getFeatureFlags(firstEnv);
       const result2:FeatureToggle[] = await getFeatureFlags(secondEnv);
@@ -66,7 +66,7 @@ export async function getFeatureToggleDiff(firstEnv:string, secondEnv: string): 
       return result;
   } catch (e) {
       console.log(e);
-      return undefined;
+      return [];
   }
 }
 
